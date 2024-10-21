@@ -1,62 +1,19 @@
 package org.example;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
-    // Simulating movie storage
-    private static List<Movie> movieDatabase = new ArrayList<>();
-
     public static void main(String[] args) throws InvalidProtocolBufferException {
-        // Simulate sending a new movie from the client (AddMovie RPC)
-        byte[] addMovieRequest = createMovieRequest();
-        addMovie(addMovieRequest);
+        // Simulate sending a Movies object
+        byte[] msg = sender();
 
-        // Simulate retrieving a movie by title (GetMovie RPC)
-        byte[] getMovieRequest = createMovieGetRequest("Inception");
-        getMovie(getMovieRequest);
+        // Simulate receiving the Movies object
+        receiver(msg);
     }
 
-    // Simulating AddMovie RPC (Server Side)
-    private static void addMovie(byte[] requestData) throws InvalidProtocolBufferException {
-        // Deserialize the request data to get the Movie object
-        Movie movie = Movie.parseFrom(requestData);
-
-        // Add the movie to the "database"
-        movieDatabase.add(movie);  // Fixed: Adding movie to movieDatabase, not to Movie object itself
-        System.out.println("Movie added: " + movie.getTitle());
-
-        // Response
-        Response response = Response.newBuilder()
-                .setSuccess(true)
-                .setMessage("Movie added successfully!")
-                .build();
-        System.out.println(response.getMessage());
-    }
-
-    // Simulating GetMovie RPC (Server Side)
-    private static void getMovie(byte[] requestData) throws InvalidProtocolBufferException {
-        // Deserialize the request data to get the MovieRequest
-        MovieRequest movieRequest = MovieRequest.parseFrom(requestData);
-        String requestedTitle = movieRequest.getTitle();
-
-        // Search for the movie in the "database"
-        for (Movie movie : movieDatabase) {  // Fixed: Iterating over movieDatabase
-            if (movie.getTitle().equals(requestedTitle)) {
-                System.out.println("Movie found:");
-                printMovieDetails(movie);
-                return;
-            }
-        }
-
-        // Movie not found
-        System.out.println("Movie not found: " + requestedTitle);
-    }
-
-    // Helper method to create a Movie request (Client Side)
-    private static byte[] createMovieRequest() {
-        // Create a cast list
+    // Method to simulate sending a Movies object
+    private static byte[] sender() {
+        // Create cast members for Inception
         CastMember castMember1 = CastMember.newBuilder()
                 .setActorName("Leonardo DiCaprio")
                 .setRole("Cobb")
@@ -67,44 +24,101 @@ public class Main {
                 .setRole("Arthur")
                 .build();
 
-        // Create a Rating
-        Rating rating = Rating.newBuilder()
+        // Create a rating for Inception
+        Rating rating1 = Rating.newBuilder()
                 .setScore(8.8f)
                 .setSource("IMDb")
                 .build();
 
-        // Create a Movie
-        Movie movie = Movie.newBuilder()
+        // Create the Inception movie object
+        Movie movie1 = Movie.newBuilder()
                 .setTitle("Inception")
                 .setDirector("Christopher Nolan")
                 .setReleaseYear(2010)
                 .setGenre(Genre.SCIFI)
                 .addCast(castMember1)
                 .addCast(castMember2)
-                .setRating(rating)
+                .setRating(rating1)
                 .build();
 
-        // Serialize the movie to a byte array (this simulates sending the request)
-        return movie.toByteArray();
+        // Create cast members for The Dark Knight
+        CastMember castMember3 = CastMember.newBuilder()
+                .setActorName("Christian Bale")
+                .setRole("Bruce Wayne")
+                .build();
+
+        CastMember castMember4 = CastMember.newBuilder()
+                .setActorName("Heath Ledger")
+                .setRole("Joker")
+                .build();
+
+        // Create a rating for The Dark Knight
+        Rating rating2 = Rating.newBuilder()
+                .setScore(9.0f)
+                .setSource("IMDb")
+                .build();
+
+        // Create The Dark Knight movie object
+        Movie movie2 = Movie.newBuilder()
+                .setTitle("The Dark Knight")
+                .setDirector("Christopher Nolan")
+                .setReleaseYear(2008)
+                .setGenre(Genre.ACTION)
+                .addCast(castMember3)
+                .addCast(castMember4)
+                .setRating(rating2)
+                .build();
+
+        // Create a Movies object that holds multiple movies
+        Movies movies = Movies.newBuilder()
+                .addMovies(movie1)
+                .addMovies(movie2)
+                .build();
+
+        // Serialize the movies to a byte array
+        byte[] msg = movies.toByteArray();
+
+        // Print serialized message as byte array
+        System.out.println("Serialized Movies (Byte Array):");
+        System.out.print("[ ");
+        for (byte b : msg) {
+            System.out.print(b + " ");
+        }
+        System.out.print("]\n");
+
+        return msg;
     }
 
-    // Helper method to create a MovieRequest to get a movie by title (Client Side)
-    private static byte[] createMovieGetRequest(String title) {
-        MovieRequest request = MovieRequest.newBuilder()
-                .setTitle(title)
-                .build();
+    // Receiver method to deserialize the byte array back to a Movies object
+    private static void receiver(byte[] msg) throws InvalidProtocolBufferException {
+        System.out.println("Received Movies Data (Byte Array):");
+        System.out.print("[ ");
+        for (byte b : msg) {
+            System.out.print(b + " ");
+        }
+        System.out.print("]\n");
 
-        return request.toByteArray();
+        Movies movies = Movies.parseFrom(msg);
+
+        System.out.println("Decoded Movies Details:");
+        System.out.println("--------------------------");
+        for (Movie movie : movies.getMoviesList()) {
+            printMovieDetails(movie);
+        }
     }
 
     // Helper method to print movie details
     private static void printMovieDetails(Movie movie) {
-        System.out.println("Title: " + movie.getTitle());
-        System.out.println("Director: " + movie.getDirector());
-        System.out.println("Release Year: " + movie.getReleaseYear());
-        System.out.println("Genre: " + movie.getGenre());
-        System.out.println("Rating: " + movie.getRating().getScore() + " from " + movie.getRating().getSource());
-        System.out.println("Cast:");
-        movie.getCastList().forEach(cast -> System.out.println(" - " + cast.getActorName() + " as " + cast.getRole()));
+        System.out.println("=== Movie Info ===");
+        System.out.printf("Title      : %s%n", movie.getTitle());
+        System.out.printf("Director   : %s%n", movie.getDirector());
+        System.out.printf("Year       : %d%n", movie.getReleaseYear());
+        System.out.printf("Genre      : %s%n", movie.getGenre());
+        System.out.printf("Rating     : %.1f from %s%n", movie.getRating().getScore(), movie.getRating().getSource());
+        System.out.println("Cast       : ");
+        movie.getCastList().forEach(cast ->
+                System.out.printf("  - %s as %s%n", cast.getActorName(), cast.getRole())
+        );
+        System.out.println("==========================");
     }
 }
