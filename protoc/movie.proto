@@ -1,0 +1,66 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "org.example";
+
+// Message for a collection of movies
+message Movies {
+    repeated Movie movies = 1;  // List of movies
+}
+
+// Main message for a single movie
+message Movie {
+    string title = 1;
+    string director = 2;
+    int32 release_year = 3;
+    Genre genre = 4;                // Genre of the movie (enum)
+    repeated CastMember cast = 5;   // List of cast members (nested message)
+    Rating rating = 6;              // Movie rating (nested message)
+}
+
+// Enum for movie genre
+enum Genre {
+    UNKNOWN = 0;          // Default value
+    ACTION = 1;
+    COMEDY = 2;
+    DRAMA = 3;
+    HORROR = 4;
+    SCIFI = 5;
+}
+
+// Nested message for cast members
+message CastMember {
+    string actor_name = 1;          // Name of the actor/actress
+    string role = 2;                // Role played in the movie
+}
+
+// Nested message for movie rating
+message Rating {
+    float score = 1;                // Rating score (e.g., 8.5)
+    string source = 2;              // Source of the rating (e.g., IMDb, Rotten Tomatoes)
+}
+
+// Service for exchanging movie data
+service MovieService {
+    // Method to add a new movie
+    rpc AddMovie (Movie) returns (Response);
+
+    // Method to retrieve a movie by title
+    rpc GetMovie (MovieRequest) returns (Movie);
+
+    // Method to update an existing movie
+    rpc UpdateMovie (Movie) returns (Response);
+
+    // Method to delete a movie by title
+    rpc DeleteMovie (MovieRequest) returns (Response);
+}
+
+// Request message to get a movie by title
+message MovieRequest {
+    string title = 1;  // Title of the movie to look up
+}
+
+// Response message for add operations
+message Response {
+    bool success = 1;     // Whether the operation was successful
+    string message = 2;   // Message with additional details (e.g., success or failure reason)
+}
