@@ -1,6 +1,9 @@
 package org.example;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.nio.charset.StandardCharsets;
+import com.google.protobuf.util.JsonFormat;
+
 
 public class Main {
     public static void main(String[] args) throws InvalidProtocolBufferException {
@@ -12,7 +15,7 @@ public class Main {
     }
 
     // Method to simulate sending a Movies object
-    private static byte[] sender() {
+    private static byte[] sender() throws InvalidProtocolBufferException {
         // Create cast members for Inception
         CastMember castMember1 = CastMember.newBuilder()
                 .setActorName("Leonardo DiCaprio")
@@ -80,16 +83,26 @@ public class Main {
 
         // Print serialized message as byte array
         System.out.println("Serialized Movies (Byte Array):");
-//        for (int i = 0; i < msg.length; i++) {
-//            System.out.print(msg[i] + " ");
-//        }
-//        System.out.println();
-//        System.out.println("Byte array length: " + msg.length);
         System.out.print("[ ");
-        for (byte b : msg) {
-            System.out.print(b + " ");
+        for (int i = 0; i < msg.length; i++) {
+            System.out.print(msg[i] + " ");
         }
         System.out.print("]\n");
+
+        System.out.println("Byte array length: " + msg.length);
+
+        System.out.println("Protobuf Data Size: " + msg.length + " bytes");
+
+        // Convert Protobuf object to JSON format using JsonFormat
+        String json = JsonFormat.printer().print(movies);
+        byte[] jsonBytes = json.getBytes(StandardCharsets.UTF_8);
+        System.out.println("JSON Data Size: " + jsonBytes.length + " bytes");
+
+        // Calculate and print size difference
+        int sizeDifference = jsonBytes.length - msg.length;
+        double savingPercentage = (sizeDifference * 100.0) / jsonBytes.length;
+        System.out.println("Difference: " + sizeDifference + " bytes");
+        System.out.printf("Storage saving: %.2f%%\n", savingPercentage);
 
         return msg;
     }
