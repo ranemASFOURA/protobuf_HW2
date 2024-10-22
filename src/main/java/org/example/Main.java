@@ -80,6 +80,11 @@ public class Main {
 
         // Print serialized message as byte array
         System.out.println("Serialized Movies (Byte Array):");
+//        for (int i = 0; i < msg.length; i++) {
+//            System.out.print(msg[i] + " ");
+//        }
+//        System.out.println();
+//        System.out.println("Byte array length: " + msg.length);
         System.out.print("[ ");
         for (byte b : msg) {
             System.out.print(b + " ");
@@ -92,6 +97,19 @@ public class Main {
     // Receiver method to deserialize the byte array back to a Movies object
     private static void receiver(byte[] msg) throws InvalidProtocolBufferException {
         System.out.println("Received Movies Data (Byte Array):");
+//        for (int i = 0; i < msg.length; i++) {
+//            System.out.print(msg[i] + " ");
+//        }
+//        System.out.println();
+//        System.out.println("Byte array length: " + msg.length);
+//
+//        // Deserialize the byte array back into a Movies object
+//        Movies movies = Movies.parseFrom(msg);
+//
+//        // Print out the list of movies
+//        System.out.println("Deserialized Movies List:");
+//        System.out.println(movies.getMoviesList());
+
         System.out.print("[ ");
         for (byte b : msg) {
             System.out.print(b + " ");
@@ -104,7 +122,7 @@ public class Main {
         System.out.println("--------------------------");
         for (Movie movie : movies.getMoviesList()) {
             printMovieDetails(movie);
-        }
+    }
     }
 
     // Helper method to print movie details
