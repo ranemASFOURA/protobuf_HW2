@@ -1,9 +1,6 @@
 package org.example;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import java.nio.charset.StandardCharsets;
-import com.google.protobuf.util.JsonFormat;
-
 
 public class Main {
     public static void main(String[] args) throws InvalidProtocolBufferException {
@@ -12,10 +9,60 @@ public class Main {
 
         // Simulate receiving the Movies object
         receiver(msg);
+
+        // Simulate adding a new movie
+        Movie newMovie = Movie.newBuilder()
+                .setTitle("Interstellar")
+                .setDirector("Christopher Nolan")
+                .setReleaseYear(2014)
+                .setGenre(Genre.SCIFI)
+                .addCast(CastMember.newBuilder()
+                        .setActorName("Matthew McConaughey")
+                        .setRole("Cooper")
+                        .build())
+                .setRating(Rating.newBuilder()
+                        .setScore(8.6f)
+                        .setSource("IMDb")
+                        .build())
+                .build();
+
+        Response addResponse = addMovie(newMovie);
+        System.out.println(addResponse.getMessage());
+
+        // Simulate retrieving a movie by title
+        MovieRequest request = MovieRequest.newBuilder()
+                .setTitle("Inception")
+                .build();
+
+        Movie retrievedMovie = getMovie(request);
+        printMovieDetails(retrievedMovie);
+
+        // Simulate updating a movie
+        Movie updatedMovie = Movie.newBuilder()
+                .setTitle("Inception")
+                .setDirector("Christopher Nolan")
+                .setReleaseYear(2010)
+                .setGenre(Genre.SCIFI)
+                .addCast(CastMember.newBuilder()
+                        .setActorName("Leonardo DiCaprio")
+                        .setRole("Cobb")
+                        .build())
+                .setRating(Rating.newBuilder()
+                        .setScore(9.0f)
+                        .setSource("IMDb")
+                        .build())
+                .build();
+
+        Response updateResponse = updateMovie(updatedMovie);
+        System.out.println(updateResponse.getMessage());
+
+        // Simulate deleting a movie
+        Response deleteResponse = deleteMovie(request);
+        System.out.println(deleteResponse.getMessage());
     }
 
     // Method to simulate sending a Movies object
-    private static byte[] sender() throws InvalidProtocolBufferException {
+    private static byte[] sender() {
         // Create cast members for Inception
         CastMember castMember1 = CastMember.newBuilder()
                 .setActorName("Leonardo DiCaprio")
@@ -84,25 +131,10 @@ public class Main {
         // Print serialized message as byte array
         System.out.println("Serialized Movies (Byte Array):");
         System.out.print("[ ");
-        for (int i = 0; i < msg.length; i++) {
-            System.out.print(msg[i] + " ");
+        for (byte b : msg) {
+            System.out.print(b + " ");
         }
         System.out.print("]\n");
-
-        System.out.println("Byte array length: " + msg.length);
-
-        System.out.println("Protobuf Data Size: " + msg.length + " bytes");
-
-        // Convert Protobuf object to JSON format using JsonFormat
-        String json = JsonFormat.printer().print(movies);
-        byte[] jsonBytes = json.getBytes(StandardCharsets.UTF_8);
-        System.out.println("JSON Data Size: " + jsonBytes.length + " bytes");
-
-        // Calculate and print size difference
-        int sizeDifference = jsonBytes.length - msg.length;
-        double savingPercentage = (sizeDifference * 100.0) / jsonBytes.length;
-        System.out.println("Difference: " + sizeDifference + " bytes");
-        System.out.printf("Storage saving: %.2f%%\n", savingPercentage);
 
         return msg;
     }
@@ -110,19 +142,6 @@ public class Main {
     // Receiver method to deserialize the byte array back to a Movies object
     private static void receiver(byte[] msg) throws InvalidProtocolBufferException {
         System.out.println("Received Movies Data (Byte Array):");
-//        for (int i = 0; i < msg.length; i++) {
-//            System.out.print(msg[i] + " ");
-//        }
-//        System.out.println();
-//        System.out.println("Byte array length: " + msg.length);
-//
-//        // Deserialize the byte array back into a Movies object
-//        Movies movies = Movies.parseFrom(msg);
-//
-//        // Print out the list of movies
-//        System.out.println("Deserialized Movies List:");
-//        System.out.println(movies.getMoviesList());
-
         System.out.print("[ ");
         for (byte b : msg) {
             System.out.print(b + " ");
@@ -135,7 +154,53 @@ public class Main {
         System.out.println("--------------------------");
         for (Movie movie : movies.getMoviesList()) {
             printMovieDetails(movie);
+        }
     }
+
+    // Method to simulate adding a new movie
+    private static Response addMovie(Movie movie) {
+        // In a real application, you would add the movie to a database
+        System.out.println("Adding movie: " + movie.getTitle());
+        return Response.newBuilder()
+                .setSuccess(true)
+                .setMessage("Movie '" + movie.getTitle() + "' added successfully.")
+                .build();
+    }
+
+    // Method to retrieve a movie by title
+    private static Movie getMovie(MovieRequest request) {
+        // In a real application, you would retrieve the movie from a database
+        System.out.println("Retrieving movie: " + request.getTitle());
+        // Simulating retrieval of a movie
+        return Movie.newBuilder()
+                .setTitle(request.getTitle())
+                .setDirector("Christopher Nolan")
+                .setReleaseYear(2010)
+                .setGenre(Genre.SCIFI)
+                .setRating(Rating.newBuilder().setScore(8.8f).setSource("IMDb").build())
+                .addCast(CastMember.newBuilder().setActorName("Leonardo DiCaprio").setRole("Cobb").build())
+                .addCast(CastMember.newBuilder().setActorName("Joseph Gordon-Levitt").setRole("Arthur").build())
+                .build();
+    }
+
+    // Method to update an existing movie
+    private static Response updateMovie(Movie movie) {
+        // In a real application, you would update the movie in a database
+        System.out.println("Updating movie: " + movie.getTitle());
+        return Response.newBuilder()
+                .setSuccess(true)
+                .setMessage("Movie '" + movie.getTitle() + "' updated successfully.")
+                .build();
+    }
+
+    // Method to delete a movie by title
+    private static Response deleteMovie(MovieRequest request) {
+        // In a real application, you would delete the movie from a database
+        System.out.println("Deleting movie: " + request.getTitle());
+        return Response.newBuilder()
+                .setSuccess(true)
+                .setMessage("Movie '" + request.getTitle() + "' deleted successfully.")
+                .build();
     }
 
     // Helper method to print movie details

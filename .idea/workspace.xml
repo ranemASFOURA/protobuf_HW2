@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="93ebac91-039a-49ef-bacc-b45f316cd523" name="Changes" comment="Other encoding and decoding experience">
+    <list default="true" id="93ebac91-039a-49ef-bacc-b45f316cd523" name="Changes" comment="size(json-protobuf)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -15,6 +14,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -46,7 +50,7 @@
     "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "services",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/RANEM/Downloads/gRPC",
     "onboarding.tips.debug.path": "D:/Fifth year/ParComp/labs/protobuf_HW2/src/main/java/org/example/Main.java"
@@ -73,6 +77,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -118,7 +126,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729577845512</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="size(json-protobuf)">
+      <option name="closed" value="true" />
+      <created>1729638132843</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1729638132844</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -126,7 +142,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="services" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -137,6 +165,7 @@
     <MESSAGE value="implement services(Simulating server and client side)" />
     <MESSAGE value="reimplement services and add encodind and decoding" />
     <MESSAGE value="Other encoding and decoding experience" />
-    <option name="LAST_COMMIT_MESSAGE" value="Other encoding and decoding experience" />
+    <MESSAGE value="size(json-protobuf)" />
+    <option name="LAST_COMMIT_MESSAGE" value="size(json-protobuf)" />
   </component>
 </project>
