@@ -1,12 +1,20 @@
 package org.example;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 
 public class Main {
     public static void main(String[] args) throws InvalidProtocolBufferException {
         // Simulate sending a Movies object
+        System.out.println("Simulate sending a Movies object");
         byte[] msg = sender();
         receiver(msg);
+
+        // Compare Protobuf and JSON sizes
+        compareProtobufAndJsonSizes(msg);
+        System.out.println("*************************************************\n");
+
+        System.out.println("Simulate calling the addMovie service");
 
         // Simulate calling the addMovie service
         System.out.println("Calling addMovie service...");
@@ -27,12 +35,16 @@ public class Main {
 
         byte[] addResponse = addMovie(newMovie);
         receiverResponse(addResponse);
+        System.out.println("*********************************\n");
 
+        System.out.println("Simulate retrieving a movie by title");
         // Simulate retrieving a movie by title
         System.out.println("\nCalling getMovie service (Title: Inception)...");
         byte[] getMovieResponse = getMovie("Inception");
         receiverMovie(getMovieResponse);
+        System.out.println("*********************************\n");
 
+        System.out.println("Simulate updating a movie");
         // Simulate updating a movie
         System.out.println("\nCalling updateMovie service...");
         Movie updatedMovie = Movie.newBuilder()
@@ -52,11 +64,14 @@ public class Main {
 
         byte[] updateResponse = updateMovie(updatedMovie);
         receiverResponse(updateResponse);
+        System.out.println("*********************************\n");
 
+        System.out.println("Simulate deleting a movie");
         // Simulate deleting a movie
         System.out.println("\nCalling deleteMovie service...");
         byte[] deleteResponse = deleteMovie("Inception");
         receiverResponse(deleteResponse);
+        System.out.println("*********************************\n");
     }
 
     // Method to simulate sending a Movies object
@@ -226,6 +241,12 @@ public class Main {
 
     // Receiver method for movie details
     private static void receiverMovie(byte[] msg) throws InvalidProtocolBufferException {
+        System.out.println("Received resmovie Data (Byte Array):");
+        System.out.print("[ ");
+        for (byte b : msg) {
+            System.out.print(b + " ");
+        }
+        System.out.print("]\n");
         Movie movie = Movie.parseFrom(msg);
         printMovieDetails(movie);
     }
@@ -243,5 +264,23 @@ public class Main {
                 System.out.printf("  - %s as %s%n", cast.getActorName(), cast.getRole())
         );
         System.out.println("==========================");
+    }
+
+    // Method to compare Protobuf and JSON sizes
+    private static void compareProtobufAndJsonSizes(byte[] protobufMsg) throws InvalidProtocolBufferException {
+        // Get the size of the Protobuf representation
+        int protobufSize = protobufMsg.length;
+        System.out.println("Protobuf Size: " + protobufSize + " bytes");
+
+        // Convert Protobuf to JSON
+        Movies movies = Movies.parseFrom(protobufMsg);
+        String jsonString = JsonFormat.printer().print(movies);
+
+        // Get the size of the JSON representation
+        int jsonSize = jsonString.getBytes().length;
+        System.out.println("JSON Size: " + jsonSize + " bytes");
+
+        // Compare sizes
+        System.out.println("Size Comparison: JSON is " + (jsonSize - protobufSize) + " bytes larger than Protobuf.");
     }
 }
