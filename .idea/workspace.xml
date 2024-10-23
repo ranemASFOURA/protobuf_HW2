@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="93ebac91-039a-49ef-bacc-b45f316cd523" name="Changes" comment="size(json-protobuf)">
+    <list default="true" id="93ebac91-039a-49ef-bacc-b45f316cd523" name="Changes" comment="Implementation and use of services">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
     </list>
@@ -134,7 +134,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729638132844</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Implementation and use of services">
+      <option name="closed" value="true" />
+      <created>1729704109012</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1729704109012</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -166,6 +174,7 @@
     <MESSAGE value="reimplement services and add encodind and decoding" />
     <MESSAGE value="Other encoding and decoding experience" />
     <MESSAGE value="size(json-protobuf)" />
-    <option name="LAST_COMMIT_MESSAGE" value="size(json-protobuf)" />
+    <MESSAGE value="Implementation and use of services" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implementation and use of services" />
   </component>
 </project>

@@ -6,11 +6,10 @@ public class Main {
     public static void main(String[] args) throws InvalidProtocolBufferException {
         // Simulate sending a Movies object
         byte[] msg = sender();
-
-        // Simulate receiving the Movies object
         receiver(msg);
 
-        // Simulate adding a new movie
+        // Simulate calling the addMovie service
+        System.out.println("Calling addMovie service...");
         Movie newMovie = Movie.newBuilder()
                 .setTitle("Interstellar")
                 .setDirector("Christopher Nolan")
@@ -26,18 +25,16 @@ public class Main {
                         .build())
                 .build();
 
-        Response addResponse = addMovie(newMovie);
-        System.out.println(addResponse.getMessage());
+        byte[] addResponse = addMovie(newMovie);
+        receiverResponse(addResponse);
 
         // Simulate retrieving a movie by title
-        MovieRequest request = MovieRequest.newBuilder()
-                .setTitle("Inception")
-                .build();
-
-        Movie retrievedMovie = getMovie(request);
-        printMovieDetails(retrievedMovie);
+        System.out.println("\nCalling getMovie service (Title: Inception)...");
+        byte[] getMovieResponse = getMovie("Inception");
+        receiverMovie(getMovieResponse);
 
         // Simulate updating a movie
+        System.out.println("\nCalling updateMovie service...");
         Movie updatedMovie = Movie.newBuilder()
                 .setTitle("Inception")
                 .setDirector("Christopher Nolan")
@@ -53,12 +50,13 @@ public class Main {
                         .build())
                 .build();
 
-        Response updateResponse = updateMovie(updatedMovie);
-        System.out.println(updateResponse.getMessage());
+        byte[] updateResponse = updateMovie(updatedMovie);
+        receiverResponse(updateResponse);
 
         // Simulate deleting a movie
-        Response deleteResponse = deleteMovie(request);
-        System.out.println(deleteResponse.getMessage());
+        System.out.println("\nCalling deleteMovie service...");
+        byte[] deleteResponse = deleteMovie("Inception");
+        receiverResponse(deleteResponse);
     }
 
     // Method to simulate sending a Movies object
@@ -157,50 +155,79 @@ public class Main {
         }
     }
 
-    // Method to simulate adding a new movie
-    private static Response addMovie(Movie movie) {
-        // In a real application, you would add the movie to a database
+
+    // Simulated service to add a new movie
+    private static byte[] addMovie(Movie movie) {
         System.out.println("Adding movie: " + movie.getTitle());
-        return Response.newBuilder()
+        Response response = Response.newBuilder()
                 .setSuccess(true)
                 .setMessage("Movie '" + movie.getTitle() + "' added successfully.")
                 .build();
+        // Serialize the movies to a byte array
+        byte[] res = response.toByteArray();
+
+        // Print serialized message as byte array
+        System.out.println("Serialized res (Byte Array):");
+        System.out.print("[ ");
+        for (byte b : res) {
+            System.out.print(b + " ");
+        }
+        System.out.print("]\n");
+
+        return res;
     }
 
-    // Method to retrieve a movie by title
-    private static Movie getMovie(MovieRequest request) {
-        // In a real application, you would retrieve the movie from a database
-        System.out.println("Retrieving movie: " + request.getTitle());
-        // Simulating retrieval of a movie
-        return Movie.newBuilder()
-                .setTitle(request.getTitle())
+    // Simulated service to retrieve a movie by title
+    private static byte[] getMovie(String title) {
+        System.out.println("Retrieving movie: " + title);
+        Movie movie = Movie.newBuilder()
+                .setTitle(title)
                 .setDirector("Christopher Nolan")
                 .setReleaseYear(2010)
                 .setGenre(Genre.SCIFI)
                 .setRating(Rating.newBuilder().setScore(8.8f).setSource("IMDb").build())
                 .addCast(CastMember.newBuilder().setActorName("Leonardo DiCaprio").setRole("Cobb").build())
-                .addCast(CastMember.newBuilder().setActorName("Joseph Gordon-Levitt").setRole("Arthur").build())
                 .build();
+
+        return movie.toByteArray();
     }
 
-    // Method to update an existing movie
-    private static Response updateMovie(Movie movie) {
-        // In a real application, you would update the movie in a database
+    // Simulated service to update a movie
+    private static byte[] updateMovie(Movie movie) {
         System.out.println("Updating movie: " + movie.getTitle());
-        return Response.newBuilder()
+        Response response = Response.newBuilder()
                 .setSuccess(true)
                 .setMessage("Movie '" + movie.getTitle() + "' updated successfully.")
                 .build();
+        return response.toByteArray();
     }
 
-    // Method to delete a movie by title
-    private static Response deleteMovie(MovieRequest request) {
-        // In a real application, you would delete the movie from a database
-        System.out.println("Deleting movie: " + request.getTitle());
-        return Response.newBuilder()
+    // Simulated service to delete a movie
+    private static byte[] deleteMovie(String title) {
+        System.out.println("Deleting movie: " + title);
+        Response response = Response.newBuilder()
                 .setSuccess(true)
-                .setMessage("Movie '" + request.getTitle() + "' deleted successfully.")
+                .setMessage("Movie '" + title + "' deleted successfully.")
                 .build();
+        return response.toByteArray();
+    }
+
+    // Receiver method for responses
+    private static void receiverResponse(byte[] msg) throws InvalidProtocolBufferException {
+        System.out.println("Received res Data (Byte Array):");
+        System.out.print("[ ");
+        for (byte b : msg) {
+            System.out.print(b + " ");
+        }
+        System.out.print("]\n");
+        Response response = Response.parseFrom(msg);
+        System.out.println(response.getMessage());
+    }
+
+    // Receiver method for movie details
+    private static void receiverMovie(byte[] msg) throws InvalidProtocolBufferException {
+        Movie movie = Movie.parseFrom(msg);
+        printMovieDetails(movie);
     }
 
     // Helper method to print movie details
